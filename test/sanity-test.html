@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing PDF Maker Service</title>
+</head>
+<script language="JavaScript">
+    function downloadPdf() {
+      var url = 'http://localhost:4000/api/v1/html';
+      var html = document.getElementById('html').value;
+      fetch(
+        url,
+        {
+          method: 'POST',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({html: html})
+        }
+      )
+    }
+</script>
+<body>
+
+<form action="http://localhost:4000/api/v1/html" method="post" enctype="application/json">
+    <textarea name="html" id="html" cols="120" rows="40"></textarea>
+    <input type="submit" value="Generate PDF" />
+</form>
+
+</body>
+</html>

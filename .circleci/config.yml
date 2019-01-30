@@ -1,0 +1,98 @@
+---
+version: 2
+jobs:
+  build:
+    docker:
+      - image: elixir:1.8-alpine
+
+    working_directory: /opt/app/pdf_maker
+
+    environment:
+      MIX_ENV: test
+      PDF_MAKER_KEY_BASE: $PDF_MAKER_KEY_BASE
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install necessary libs
+          command: apk add --no-cache qt5-qtwebkit qt5-qtbase docker
+
+      - run:
+          name: Install wkhtmltopdf
+          command: |
+            apk add \
+            --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
+            --allow-untrusted \
+            --no-cache \
+            wkhtmltopdf
+
+      - run:
+          name: Set up Hex locally
+          command: |
+            mix local.hex --force && mix local.rebar --force
+
+      - run:
+          name: Set mix.lock aside
+          command: cp mix.lock mix.lock.orig
+
+      - restore_cache:
+          keys:
+            - pdf_maker-{{ checksum "mix.lock.orig" }}
+            - pdf_maker-{{ .Branch }}
+            - pdf_maker-master
+
+      - run:
+          name: Download dependencies
+          command: mix deps.get
+
+      - save_cache:
+          key: pdf_maker-{{ .Branch }}
+          paths:
+            - _build
+            - deps
+
+      - save_cache:
+          key: pdf_maker-{{ checksum "mix.lock.orig" }}
+          paths:
+            - _build
+            - deps
+
+      - run:
+          name: Run Tests
+          command: mix test
+
+      ## Prod docker image building
+      - restore_cache:
+          keys:
+            - pdf_maker-prod-{{ checksum "mix.lock.orig" }}
+            - pdf_maker-prod-{{ .Branch }}
+            - pdf_maker-prod-master
+
+      - save_cache:
+          key: pdf_maker-prod-{{ .Branch }}
+          paths:
+            - _build/prod
+
+      - save_cache:
+          key: pdf_maker-prod-{{ checksum "mix.lock.orig" }}
+          paths:
+            - _build/prod
+
+      # all steps after this run in the remote environment
+      - type: setup-docker-engine
+        reusable: true
+        version: 17.06.0-ce
+
+      - run:
+          name: Build docker image and publish image tagged with commit
+          command: |
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker build -t avvo/$CIRCLE_PROJECT_REPONAME:latest .
+            docker push avvo/pdf_maker:latest
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build:
+        context: org-global
