@@ -87,7 +87,7 @@ jobs:
       - run:
           name: Build docker image and publish image tagged with commit
           command: |
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
             docker build -t avvo/$CIRCLE_PROJECT_REPONAME:latest .
             docker push avvo/pdf_maker:latest
 workflows:
