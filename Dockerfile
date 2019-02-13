@@ -24,7 +24,7 @@ RUN mkdir -p /opt/app/built && \
 
 ## Now, build the actual release image
 
-FROM alpine:3.8
+FROM alpine:3.9
 
 RUN apk add --no-cache qt5-qtwebkit qt5-qtbase bash openssl
 
