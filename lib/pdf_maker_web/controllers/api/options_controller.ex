@@ -30,7 +30,7 @@ defmodule PdfMakerWeb.OptionsController do
 
   def app_modules do
     [
-      PdfMakerWeb.Supervisor
+      PdfMaker.Supervisor
     ]
   end
 
