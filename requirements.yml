@@ -2,16 +2,7 @@
 service_name: pdf-maker
 image: avvo/pdf_maker
 facing: backend
-unique_hosts: true
+routing:
+  port: 4000
 health_check:
   port: 4000
-  path: "/options/full_stack_status"
-start_before_stop: true
-routing:
-  lb_port: 8890
-  path: /
-  port: 4000
-  protocol: http
-  subdomain:
-  - pdf-maker
-  - pdf_maker
