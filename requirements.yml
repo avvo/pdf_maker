@@ -1,5 +1,5 @@
 ---
-service_name: pdf_maker
+service_name: pdf-maker
 image: avvo/pdf_maker
 facing: backend
 unique_hosts: true
@@ -12,4 +12,6 @@ routing:
   path: /
   port: 4000
   protocol: http
-  subdomain: pdf_maker
+  subdomain:
+  - pdf-maker
+  - pdf_maker
