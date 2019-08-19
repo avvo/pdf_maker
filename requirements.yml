@@ -6,3 +6,5 @@ routing:
   port: 4000
 health_check:
   port: 4000
+memory_request: 90Mi
+memory_limit: 140Mi
