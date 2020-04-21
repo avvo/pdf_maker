@@ -9,4 +9,4 @@ config :pdf_generator,
 
 config :phoenix, :serve_endpoints, true
 
-config :logger, level: :info
+config :logger, level: :warn
