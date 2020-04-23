@@ -29,7 +29,7 @@ FROM alpine:3.9
 RUN apk add --no-cache qt5-qtwebkit qt5-qtbase bash openssl
 
 RUN apk add \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
+    --repository http://dl-3.alpinelinux.org/alpine/3.9/community/ \
     --allow-untrusted \
     --no-cache \
     wkhtmltopdf
