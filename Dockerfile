@@ -1,8 +1,6 @@
 FROM avvo/elixir:1.8.2-otp22 AS BOB_THE_BUILDER
 
-ARG MIX_ENV=prod
-
-ENV MIX_ENV=${MIX_ENV}
+ENV MIX_ENV=prod
 
 WORKDIR /opt/app
 
