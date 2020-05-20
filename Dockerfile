@@ -26,6 +26,8 @@ RUN mkdir -p /opt/app/built && \
 
 FROM avvo/alpine:3.9-wkhtmltopdf-0.12.5
 
+RUN apk add --no-cache bash
+
 RUN mkdir -p /opt/app/pdf_maker
 
 WORKDIR /opt/app/pdf_maker
