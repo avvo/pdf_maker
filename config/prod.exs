@@ -5,7 +5,7 @@ config :pdf_maker, PdfMakerWeb.Endpoint,
   secret_key_base: System.get_env("PDF_MAKER_KEY_BASE")
 
 config :pdf_generator,
-       wkhtml_path: "/usr/bin/wkhtmltopdf"
+  wkhtml_path: "/usr/local/bin/wkhtmltopdf"
 
 config :phoenix, :serve_endpoints, true
 

@@ -1,15 +1,10 @@
-FROM elixir:1.8-alpine AS BOB_THE_BUILDER
+FROM avvo/elixir:1.8.2-otp22 AS BOB_THE_BUILDER
 
 ARG MIX_ENV=prod
 
 ENV MIX_ENV=${MIX_ENV}
 
 WORKDIR /opt/app
-
-RUN apk update && \
-    apk upgrade --no-cache && \
-    apk add --no-cache \
-    git
 
 RUN mix local.rebar --force && \
     mix local.hex --force
@@ -24,24 +19,16 @@ RUN mkdir -p /opt/app/built && \
 
 ## Now, build the actual release image
 
-FROM alpine:3.9
+FROM avvo/elixir-release-ubuntu:18.04
 
-RUN apk add --no-cache qt5-qtwebkit qt5-qtbase bash openssl
+RUN apt-get update && \
+    apt-get install -y libxext6 libfontconfig1 libxrender1
 
-RUN apk add \
-    --repository http://dl-3.alpinelinux.org/alpine/v3.9/community/ \
-    --allow-untrusted \
-    --no-cache \
-    wkhtmltopdf
-
-RUN rm -f /var/cache/apk/*
+COPY bin/wkhtmltopdf /usr/local/bin/
 
 RUN mkdir -p /opt/app/pdf_maker
 
 WORKDIR /opt/app/pdf_maker
-
-RUN WK_PATH=$(find / -name wkhtmltopdf) && \
-    export PATH=$WK_PATH:$PATH
 
 COPY --from=BOB_THE_BUILDER /opt/app/built/pdf_maker.tar.gz .
 
