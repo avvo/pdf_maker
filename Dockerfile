@@ -24,22 +24,13 @@ RUN mkdir -p /opt/app/built && \
 
 ## Now, build the actual release image
 
-FROM alpine:3.9
+FROM surnet/alpine-wkhtmltopdf:3.9-0.12.5-small
 
-RUN apk add --no-cache qt5-qtwebkit qt5-qtbase bash openssl
-
-RUN apk add \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
-    --allow-untrusted \
-    --no-cache \
-    wkhtmltopdf
-
-RUN rm -f /var/cache/apk/*
+RUN apk add bash --no-cache
 
 RUN mkdir -p /opt/app/pdf_maker
 
 WORKDIR /opt/app/pdf_maker
-
 RUN WK_PATH=$(find / -name wkhtmltopdf) && \
     export PATH=$WK_PATH:$PATH
 
