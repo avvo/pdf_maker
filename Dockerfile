@@ -1,8 +1,6 @@
 FROM elixir:1.8-alpine AS BOB_THE_BUILDER
 
-ARG MIX_ENV=prod
-
-ENV MIX_ENV=${MIX_ENV}
+ENV MIX_ENV=prod
 
 WORKDIR /opt/app
 
@@ -24,24 +22,13 @@ RUN mkdir -p /opt/app/built && \
 
 ## Now, build the actual release image
 
-FROM alpine:3.9
+FROM avvo/alpine:3.9-wkhtmltopdf-0.12.5
 
-RUN apk add --no-cache qt5-qtwebkit qt5-qtbase bash openssl
-
-RUN apk add \
-    --repository http://dl-3.alpinelinux.org/alpine/edge/community/ \
-    --allow-untrusted \
-    --no-cache \
-    wkhtmltopdf
-
-RUN rm -f /var/cache/apk/*
+RUN apk add --no-cache bash
 
 RUN mkdir -p /opt/app/pdf_maker
 
 WORKDIR /opt/app/pdf_maker
-
-RUN WK_PATH=$(find / -name wkhtmltopdf) && \
-    export PATH=$WK_PATH:$PATH
 
 COPY --from=BOB_THE_BUILDER /opt/app/built/pdf_maker.tar.gz .
 

@@ -87,8 +87,8 @@ jobs:
       - run:
           name: Build docker image and publish image tagged with commit
           command: |
-            docker build -t avvo/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 .
             docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker build -t avvo/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 .
             docker push avvo/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
 workflows:
   version: 2
